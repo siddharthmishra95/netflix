@@ -1,7 +1,26 @@
 import { InfoOutlined, PlayArrow } from "@material-ui/icons"
 import "./featured.scss"
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function Featured({ type }) {
+    const [content, setContent] = useState({});
+
+    useEffect(() => {
+        const getRandomContent = async () => {
+            try {
+                const res = await axios.get(`/movies/random?type=${type}`, {
+                    headers: {
+                        token: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNDYyYjJiM2RhY2E2NGFjZjU3MDRkNSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTYzMjgwNTk4MSwiZXhwIjoxNjMzMjM3OTgxfQ.ywNKUE-OjUSHGGsjdYDOFh95hCcu_ANAVnouTEYgjs0"
+                    },
+                });
+                setContent(res.data[0]);
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        getRandomContent();
+    }, [type])
     return (
         <div className="featured" >
             {type && (
@@ -16,20 +35,16 @@ export default function Featured({ type }) {
                     </select>
                 </div>
             )}
-            <img src="https://images.hdqwalls.com/wallpapers/matrix-trilogy-ky.jpg"
+            <img src={content.img}
                 alt="" />
 
             <div className="info">
-                <img src="https://www.pngfind.com/pngs/m/232-2323338_the-matrix-reloaded-architecture-hd-png-download.png"
+                <img src={content.imgTitle}
                     alt="" />
 
 
                 <span className="desc">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur quam et quis
-                    culpa ipsam officiis dolorum perferendis itaque illum non porro doloremque
-                    debitis, odit sequi quo facere in asperiores provident!culpa ipsam officiis dolorum
-                    perferendis itaque illum non porro doloremque debitis, odit sequi quo facere in
-                    asperiores provident!
+                    {content.desc}
                 </span>
                 <div className="buttons">
                     <button className="play">
